@@ -35,25 +35,41 @@ def getDataPoint(quote):
     stock = quote['stock']
     bid_price = float(quote['top_bid']['price'])
     ask_price = float(quote['top_ask']['price'])
-    price = bid_price
+    price = (bid_price + ask_price)/2
     return stock, bid_price, ask_price, price
 
 
 def getRatio(price_a, price_b):
     """ Get ratio of price_a and price_b """
     """ ------------- Update this function ------------- """
-    return 1
+    if (price_b == 0):
+        return
+    else:
+        return price_a/price_b
 
 
 # Main
 if __name__ == "__main__":
+    # checks whether script is being run as a module OR the main program
     # Query the price once every N seconds.
+    #__name__ is a special built-in variable which sets to __main__ when script is executed directly
+    # when a script is imported as a module, the name is set to __name__
+    # code will only run when script is run directly
     for _ in iter(range(N)):
+        # creates iterator that iterates N times
+        #(range(N) generates a sequence of numbers from 0 to N-1)
         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+        # opens a URL and retrieves data from it
+        #random.random is a placeholder for introducinf variability
+        #json.loads parses the JSON data retrieved from the URL into a python dictionary or list
 
         """ ----------- Update to get the ratio --------------- """
+        prices = {}
+        # creates empty dictionary
         for quote in quotes:
+            #iterates through each quote in the quote list and proceses it
+            #getdatapoint(quote) extracts the data points of each quote
             stock, bid_price, ask_price, price = getDataPoint(quote)
             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
-
-        print("Ratio %s" % getRatio(price, price))
+            # formats extracted data into string
+        print("Ratio %s" % getRatio(prices["ABC"], prices["DEF"]))
